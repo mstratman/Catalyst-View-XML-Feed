@@ -99,7 +99,7 @@ sub _make_feed_recognizable {
         ? $self->default_format
         : $feed->{format};
     my @format;
-    if ($format) {
+    if (ref $format) {
         # Docs for this say format should be a string ('RSS 2.0'), but
         # format can also be XML::Feed style ('RSS', version => '2.0')
         # since all other attributes are like XML::Feed
