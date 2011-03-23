@@ -95,9 +95,9 @@ sub _make_feed_recognizable {
 
     # Otherwise, let's convert it to an XML::Feed.
 
-    my $format = UNIVERSAL::can($feed, 'isa') || ! ref $feed->{format}
-        ? $self->default_format
-        : $feed->{format};
+    my $format = UNIVERSAL::can($feed, 'format')
+        ? $feed->format
+        : (defined $feed->{format} ? $feed->{format} : $self->default_format);
     my @format;
     if (ref $format) {
         # Docs for this say format should be a string ('RSS 2.0'), but
