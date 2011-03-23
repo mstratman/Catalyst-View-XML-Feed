@@ -101,13 +101,16 @@ sub _make_feed_recognizable {
     my @format;
     if (ref $feed->{format}) {
         # Docs for this say format should be a string ('RSS 2.0'), but
-        # format can also be XML::Feed style ('RSS' => '2.0')
+        # format can also be XML::Feed style ('RSS', version => '2.0')
         # since all other attributes are like XML::Feed
         @format = ref $feed->{format} eq 'ARRAY'
             ? @{ $feed->{format} }
             : %{ $feed->{format} };
     } else {
         @format = split /\s+/, $feed->{format};
+    }
+    if (scalar(@format) > 1) {
+        splice @format, 1, 0, 'version';
     }
 
     my $xf_feed = XML::Feed->new(@format);
