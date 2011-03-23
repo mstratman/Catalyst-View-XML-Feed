@@ -2,6 +2,8 @@ package TestApp::Controller::Root;
 use Moose;
 use namespace::autoclean;
 use DateTime;
+use MyFeed;
+use MyEntry;
 
 BEGIN { extends 'Catalyst::Controller' }
 
@@ -13,7 +15,7 @@ sub _feed_title :Private { return 'My awesome site'; }
 sub _feed_tagline :Private { return 'A great tagline'; }
 sub _feed_description :Private { return 'The greatest site ever'; }
 sub _feed_author :Private { return 'Mark A. Stratman'; }
-sub _feed_language :Private { return 'English'; }
+sub _feed_language :Private { return 'en-us'; }
 sub _feed_copyright :Private { return 'Copyright me 2011'; }
 sub _feed_generator :Private { return 'Catalyst::View::XML::Feed ' . $Catalyst::View::XML::Feed::VERSION; }
 sub _feed_id : Private { return _feed_link(@_); }
@@ -102,30 +104,186 @@ sub _xml_feed : Private {
     return $feed;
 }
 
-sub atom_xml_feed : Local {
+sub xml_feed__atom : Local {
     my ($self, $c) = @_;
     $c->stash->{feed} = $self->_xml_feed($c, 'Atom');
     $c->forward('View::Feed');
 }
-sub rss_xml_feed : Local {
+sub xml_feed__rss : Local {
     my ($self, $c) = @_;
     $c->stash->{feed} = $self->_xml_feed($c, 'RSS');
     $c->forward('View::Feed');
 }
-sub rss09_xml_feed : Local {
+sub xml_feed__rss09 : Local {
     my ($self, $c) = @_;
     $c->stash->{feed} = $self->_xml_feed($c, 'RSS', version => '0.9');
     $c->forward('View::Feed');
 }
-sub rss1_xml_feed : Local {
+sub xml_feed__rss1 : Local {
     my ($self, $c) = @_;
     $c->stash->{feed} = $self->_xml_feed($c, 'RSS', version => '1.0');
     $c->forward('View::Feed');
 }
-sub rss2_xml_feed : Local {
+sub xml_feed__rss2 : Local {
     my ($self, $c) = @_;
     $c->stash->{feed} = $self->_xml_feed($c, 'RSS', version => '2.0');
     $c->forward('View::Feed');
+}
+
+sub feed_obj_entries_arrayref_objs__rss : Local {
+    my ($self, $c) = @_;
+    my $feed = MyFeed->new($self->_my_feed_hash($c));
+    my $entry = MyEntry->new($self->_my_entry_hash($c));
+    $feed->entries([ $entry ]);
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+
+sub feed_obj_array_entries_array_objs__rss : Local {
+    my ($self, $c) = @_;
+    my $feed = MyFeed->new($self->_my_feed_hash($c));
+    my $entry = MyEntry->new($self->_my_entry_hash($c));
+    $feed->{_return_entries_array} = 1;
+    $feed->entries([ $entry ]);
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+
+sub feed_hash_entries_objs__rss : Local {
+    my ($self, $c) = @_;
+    my $feed = $self->_my_feed_hash($c);
+    my $entry = MyEntry->new($self->_my_entry_hash($c));
+    $feed->{entries} = [ $entry ];
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+sub feed_hash_entries_objs__atom : Local {
+    my ($self, $c) = @_;
+    my $feed = $self->_my_feed_hash($c);
+    my $entry = MyEntry->new($self->_my_entry_hash($c));
+    $feed->{format} = 'Atom';
+    $feed->{entries} = [ $entry ];
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+
+sub feed_hash_entries_hashes__rss : Local {
+    my ($self, $c) = @_;
+    my $feed = $self->_my_feed_hash($c);
+    $feed->{entries} = [ $self->_my_entry_hash($c) ];
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+
+sub xml_rss : Local {
+    my ($self, $c) = @_;
+    eval { require XML::RSS; };
+    if ($@) {
+        return $c->res->body('XML::RSS not installed');
+    }
+    my $rss = XML::RSS->new(version => '1.0');
+    $rss->channel(
+        title => $self->_feed_title($c),
+        link  => $self->_feed_link($c),
+        description => $self->_feed_description($c),
+        dc => {
+            date => '2000-08-23T07:00+00:00',
+            subject    => "what is this",
+            creator    => $self->_feed_author($c),
+            publisher  => $self->_feed_author($c),
+            rights     => $self->_feed_copyright($c),
+            language   => $self->_feed_language($c),
+        },
+    );
+    $rss->add_item(
+        title => $self->_entry_title($c),
+        link  => $self->_entry_link($c),
+        description => $self->_entry_content($c),
+    );
+    $c->stash->{feed} = $rss;
+    $c->forward('View::Feed');
+}
+
+sub xml_atom_simplefeed : Local {
+    my ($self, $c) = @_;
+    eval { require XML::Atom::SimpleFeed; };
+    if ($@) {
+        return $c->res->body('XML::Atom::SimpleFeed not installed');
+    }
+    my $feed = XML::Atom::SimpleFeed->new(
+        title => $self->_feed_title($c),
+        link  => $self->_feed_link($c),
+        updated => '2003-12-13T18:30:02Z',
+        author => $self->_feed_author($c),
+        id => $self->_feed_id($c),
+    );
+    $feed->add_entry(
+        title => $self->_entry_title($c),
+        link  => $self->_entry_link($c),
+        id => $self->_entry_id($c),
+        updated => '2003-12-13T18:30:02Z',
+        summary => $self->_entry_summary($c),
+        category => $self->_entry_category($c),
+        content => $self->_entry_content($c),
+        author  => $self->_entry_author($c),
+    );
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+sub xml_atom_feed : Local {
+    my ($self, $c) = @_;
+    eval { require XML::Atom::Feed; };
+    if ($@) {
+        return $c->res->body('XML::Atom::Feed not installed');
+    }
+    my $feed = XML::Atom::Feed->new();
+    $feed->title($self->_feed_title($c));
+    $feed->link($self->_feed_link($c));
+    $feed->updated('2003-12-13T18:30:02Z');
+    $feed->author($self->_feed_author($c));
+    $feed->id($self->_feed_id($c));
+    my $entry = XML::Atom::Entry->new;
+    $entry->title($self->_entry_title($c));
+    $entry->link($self->_entry_link($c));
+    $entry->id($self->_entry_id($c));
+    $entry->updated('2003-12-13T18:30:02Z');
+    $entry->summary($self->_entry_summary($c));
+    $entry->content($self->_entry_content($c));
+    $entry->author($self->_entry_author($c));
+    $feed->add_entry($entry);
+    $c->stash->{feed} = $feed;
+    $c->forward('View::Feed');
+}
+
+sub _my_feed_hash : Private {
+    my ($self, $c) = @_;
+    return {
+        id => $self->_feed_id($c),
+        title => $self->_feed_title($c),
+        description => $self->_feed_description($c),
+        link => $self->_feed_link($c),
+        modified => $self->_now($c),
+        base => $self->_feed_base($c),
+        tagline=>$self->_feed_tagline($c),
+        author=>$self->_feed_author($c),
+        copyright=>$self->_feed_copyright($c),
+        generator=>$self->_feed_generator($c),
+    };
+}
+sub _my_entry_hash : Private {
+    my ($self, $c) = @_;
+    # 'base' value intentionally left out.
+    return {
+        title => $self->_entry_title($c),
+        link=>$self->_entry_link($c),
+        content => $self->_entry_content($c),
+        summary=>$self->_entry_summary($c),
+        category=>$self->_entry_category($c),
+        author=>$self->_entry_author($c),
+        id=>$self->_entry_id($c),
+        issued=>$self->_now($c),
+        modified=>$self->_now($c),
+    };
 }
 
 __PACKAGE__->meta->make_immutable;
