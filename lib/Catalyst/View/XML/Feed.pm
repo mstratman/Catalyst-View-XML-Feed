@@ -124,8 +124,9 @@ sub _make_feed_recognizable {
             }
         }
         if ($feed->can('entries')) {
+            # Allow for feed->entries to return either array or arrayref.
             @entries = ($feed->entries);
-            if (scalar(@entries) == 1 && ref($entries[0]) eq 'ARRAY') {
+            if (scalar(@entries) == 1 && ref($entries[0]) eq 'ARRAY' && ! UNIVERSAL::can($entries[0], 'isa')) {
                 @entries = @{ $entries[0] };
             }
         }
