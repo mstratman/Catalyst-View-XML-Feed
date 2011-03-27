@@ -258,7 +258,7 @@ L<xml string|/"Plain text">.
       ],
   };
 
-=head3 Keys for feed
+=item Keys for feed
 
 The C<feed> hash can take any of the following keys.  They are identical
 to those supported by L<XML::Feed>.  See L<XML::Feed> for more details.
@@ -306,7 +306,7 @@ An array ref of L<entries|/"Keys for entries">.
 
 =back 
 
-=head3 Keys for entries
+=item Keys for entries
 
 The C<entries> array contains any number of hashrefs, each representing
 an entry in the feed. Each can contain any of the following keys.
