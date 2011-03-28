@@ -259,6 +259,8 @@ L<xml string|/"Plain text">.
       ],
   };
 
+=over 4
+
 =item Keys for feed
 
 The C<feed> hash can take any of the following keys.  They are identical
@@ -348,6 +350,8 @@ This should be a L<DateTime> object.
 =item author
 
 =back 
+
+=back
 
 =head2 Arbitrary custom objects
 
