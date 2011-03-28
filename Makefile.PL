@@ -14,6 +14,6 @@ build_requires 'Test::WWW::Mechanize::Catalyst';
 build_requires 'Test::More' => '0.88';
 build_requires 'DateTime';
 
-resources repository => 'git://github.com/mstratman/Catalyst-View-XML-Feed.git';
+resources repository => 'https://github.com/mstratman/Catalyst-View-XML-Feed';
 
 WriteAll();
