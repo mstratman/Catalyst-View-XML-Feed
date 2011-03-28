@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst::View::JSON
 
+0.03  Mon Mar 28 11:05:47 CDT 2011
+      - Fixed tests to use Test::More::use_ok instead of Test::use::ok
+        http://www.cpantesters.org/cpan/report/421c5730-58cb-11e0-8a39-a371061ad747
+
 0.02  Mon Mar 28 10:33:00 CDT 2011
       - Fixed repository link (primary reason for this release)
       - added documentation

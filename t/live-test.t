@@ -10,7 +10,7 @@ use FindBin qw($Bin);
 use lib "$Bin/lib";
 
 # make sure testapp works
-use ok 'TestApp';
+BEGIN { use_ok 'TestApp'; }
 
 # a live test against TestApp, the test application
 use Test::WWW::Mechanize::Catalyst 'TestApp';
