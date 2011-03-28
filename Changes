@@ -1,7 +1,9 @@
 Revision history for Perl extension Catalyst::View::JSON
 
 0.02  Mon Mar 28 10:33:00 CDT 2011
-      - first release
+      - Fixed repository link (primary reason for this release)
+      - added documentation
+      - pod change: switched 3rd level headings to items
 
 0.01  Mon Mar 21 14:15:15 CDT 2011
       - first release
