@@ -4,13 +4,14 @@ extends 'Catalyst::View';
 use XML::Feed;
 use namespace::autoclean;
 
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 
 has default_format => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
     default  => 'RSS 1.0',
+    documentation => 'The default format for a feed, when the format cannot otherwise be determined.  Acceptable values are: "Atom", "RSS 0.91", "RSS 1.0", "RSS 2.0".',
 );
 has xml_feed_attributes => (
     is       => 'ro',
