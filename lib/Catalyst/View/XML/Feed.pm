@@ -203,8 +203,6 @@ sub _content_type_for_feed {
     }
 }
 
-1;
-
 =head1 NAME
 
 Catalyst::View::XML::Feed - Catalyst view for RSS, Atom, or other XML feeds
@@ -442,3 +440,5 @@ This sofware is free software, and is licensed under the same terms as perl itse
 
 =cut
 
+__PACKAGE__->meta->make_immutable;
+1;
