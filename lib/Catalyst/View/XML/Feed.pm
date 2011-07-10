@@ -95,9 +95,11 @@ sub _make_feed_recognizable {
         }
     }
 
+    return $feed unless Scalar::Util::blessed($feed) || ref $feed eq 'HASH';
+
     # Otherwise, let's convert it to an XML::Feed.
 
-    my $format = UNIVERSAL::can($feed, 'format')
+    my $format = Scalar::Util::blessed($feed) && $feed->can('format')
         ? $feed->format
         : (defined $feed->{format} ? $feed->{format} : $self->default_format);
     my @format;
