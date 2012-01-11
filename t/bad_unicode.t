@@ -25,6 +25,7 @@ my $out = $view->render(bless({}, 'MyApp'), {
     ],
 });
 unlike $out, qr{title>foo&#xC3;&#xA8;</title};
+like $out, qr{<title>foo&#xE8;</title>};
 
 done_testing;
 
