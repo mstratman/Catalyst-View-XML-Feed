@@ -147,7 +147,7 @@ sub _make_feed_recognizable {
 
     # Create the entries.
     for my $entry (@entries) {
-        my $xf_entry = XML::Feed::Entry->new();
+        my $xf_entry = XML::Feed::Entry->new($format[0]);
 
         if (Scalar::Util::blessed($entry)) {
             for my $key (@{ $self->xml_feed_entry_attributes }) {
