@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst::View::JSON
 
+0.05  Wed Jan 11 09:32:21 CST 2012
+      - Re-releasing because 0.04 didn't include an updated version
+        of this file, nor any credit to t0m for the patch.
+
 0.04  Wed Jan 11 09:26:09 CST 2012
       - Bugfix for encoding issue: adding an entry to an RSS
         feed tried to add an Atom entry. Patch from Thomas Doran
