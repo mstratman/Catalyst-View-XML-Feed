@@ -432,6 +432,10 @@ L<http://github.com/mstratman/Catalyst-View-XML-Feed>
 
 Mark A. Stratman E<lt>stratman@gmail.comE<gt>
 
+=head1 CONTRIBUTORS
+
+Thomas Doran (t0m)
+
 =head1 COPYRIGHT & LICENSE
 
 Copyright 2011 the above author(s).
