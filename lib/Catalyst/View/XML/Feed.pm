@@ -5,7 +5,7 @@ use XML::Feed;
 use Scalar::Util ();
 use namespace::autoclean;
 
-our $VERSION = 0.05;
+our $VERSION = '0.06';
 
 has default_format => (
     is       => 'ro',
