@@ -1,5 +1,9 @@
 Revision history for Perl extension Catalyst::View::JSON
 
+0.07  Mon Jul  2 14:25:25 CDT 2012
+      - Added entry for 0.06 in this Changes file.
+        (whoops - it was forgotten with 0.06 release).
+
 0.06  Mon Jul  2 14:24:18 CDT 2012
       - Changed tests to use Catalyst::Test instead of
         Test::WWW::Mechanize::Catalyst
