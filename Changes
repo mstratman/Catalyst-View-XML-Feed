@@ -1,5 +1,10 @@
 Revision history for Perl extension Catalyst::View::JSON
 
+0.06  Mon Jul  2 14:24:18 CDT 2012
+      - Changed tests to use Catalyst::Test instead of
+        Test::WWW::Mechanize::Catalyst
+        https://rt.cpan.org/Ticket/Display.html?id=78122
+
 0.05  Wed Jan 11 09:32:21 CST 2012
       - Re-releasing because 0.04 didn't include an updated version
         of this file, nor any credit to t0m for the patch.
