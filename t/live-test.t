@@ -13,10 +13,9 @@ use lib "$Bin/lib";
 BEGIN { use_ok 'TestApp'; }
 
 # a live test against TestApp, the test application
-use Test::WWW::Mechanize::Catalyst 'TestApp';
-my $mech = Test::WWW::Mechanize::Catalyst->new;
-$mech->get_ok('http://localhost/', 'get main page');
-$mech->content_like(qr/it works/i, 'main page has our text');
+use Catalyst::Test 'TestApp';
+
+like(get('/'), qr/it works/i, 'main page has our text');
 
 
 subtest 'custom_formats' => sub {
@@ -28,7 +27,7 @@ subtest 'custom_formats' => sub {
         feed_hash_entries_hashes__rss
         ))
     {
-        test_action($mech, $action);
+        test_action($action);
     }
 };
 
@@ -38,7 +37,7 @@ subtest 'xml_feed' => sub {
         xml_feed__rss1 xml_feed__rss2
         ))
     {
-        test_action($mech, $action);
+        test_action($action);
     }
 };
 
@@ -47,7 +46,7 @@ subtest 'xml_rss' => sub {
     plan(skip_all => 'XML::RSS not installed') if $@;
     for my $action (qw(xml_rss))
     {
-        test_action($mech, $action);
+        test_action($action);
     }
 };
 
@@ -56,7 +55,7 @@ subtest 'xml_atom_simplefeed' => sub {
     plan(skip_all => 'XML::Atom::SimpleFeed not installed') if $@;
     for my $action (qw(xml_atom_simplefeed))
     {
-        test_action($mech, $action);
+        test_action($action);
     }
 };
 
@@ -65,29 +64,34 @@ subtest 'xml_atom_feed' => sub {
     plan(skip_all => 'XML::Atom::Feed not installed') if $@;
     for my $action (qw(xml_atom_feed))
     {
-        test_action($mech, $action);
+        test_action($action);
     }
 };
 
 sub test_action {
-    my ($mech, $action) = @_;
-    $mech->get_ok("http://localhost/$action", "get /$action");
+    my ($action) = @_;
+
+    my $res = request('/' . $action);
+    my $content = $res->content;
+
+    cmp_ok($res->code, 'eq', 200, "/$action code is 200");
+
     my $ct = 'text/xml';
     if ($action =~ /rss/) {
         $ct = 'application/rss+xml';
     } elsif ($action =~ /atom/) {
         $ct = 'application/atom+xml';
     }
-    cmp_ok($mech->content_type, 'eq', $ct, "/$action has correct content_type");
-    $mech->content_like(qr/my awesome site/i, "/$action has 'my awesome site'");
-    $mech->content_like(qr/my first post/i, "/$action has 'my first post'");
-    $mech->content_like(qr/my_first_post/i, "/$action has 'my_first_post'");
+    cmp_ok($res->header('Content-Type'), 'eq', $ct, "/$action has correct Content-Type ($ct)");
+
+    like($content, qr/my awesome site/i, "/$action has 'my awesome site'");
+    like($content, qr/my first post/i, "/$action has 'my first post'");
 
     SKIP: {
         skip "No author or description expected for RSS 0.9", 2
-            if $mech->content =~ m!http://my.netscape.com/rdf/simple/0.9/!i;
-        $mech->content_like(qr/it works/i, "/$action has 'it works'");
-        $mech->content_like(qr/Mark A\. Stratman/i, "/$action has 'Mark A. Stratman'");
+            if $content =~ m!http://my.netscape.com/rdf/simple/0.9/!i;
+        like($content, qr/it works/i, "/$action has 'it works'");
+        like($content, qr/Mark A\. Stratman/i, "/$action has 'Mark A. Stratman'");
     }
 }
 
