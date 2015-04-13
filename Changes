@@ -1,5 +1,8 @@
 Revision history for Perl extension Catalyst::View::XML::Feed
 
+0.08  Mon Apr 13 10:20:32 CDT 2015
+      - Fixed overly restrictive failing test
+
 0.07  Mon Jul  2 14:25:25 CDT 2012
       - Added entry for 0.06 in this Changes file.
         (whoops - it was forgotten with 0.06 release).

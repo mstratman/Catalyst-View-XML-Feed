@@ -78,11 +78,11 @@ sub test_action {
 
     my $ct = 'text/xml';
     if ($action =~ /rss/) {
-        $ct = 'application/rss+xml';
+        $ct = 'application/rss\+xml';
     } elsif ($action =~ /atom/) {
-        $ct = 'application/atom+xml';
+        $ct = 'application/atom\+xml';
     }
-    cmp_ok($res->header('Content-Type'), 'eq', $ct, "/$action has correct Content-Type ($ct)");
+    like($res->header('Content-Type'), qr/$ct/, "/$action has correct Content-Type ($ct)");
 
     like($content, qr/my awesome site/i, "/$action has 'my awesome site'");
     like($content, qr/my first post/i, "/$action has 'my first post'");
