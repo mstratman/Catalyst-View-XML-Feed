@@ -5,7 +5,7 @@ use XML::Feed;
 use Scalar::Util ();
 use namespace::autoclean;
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 has default_format => (
     is       => 'ro',
@@ -218,7 +218,7 @@ Create your view, e.g. lib/MyApp/View/Feed.pm
 In a controller, set the C<feed> stash variable and forward to your view:
 
   sub rss : Local {
-      my ($self, $c) = @_:
+      my ($self, $c) = @_;
       $c->stash->{feed} = $feed_obj_or_data;
       $c->forward('View::Feed');
   }

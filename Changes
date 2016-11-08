@@ -1,5 +1,10 @@
 Revision history for Perl extension Catalyst::View::XML::Feed
 
+0.09  Tue Nov  8 10:08:14 CST 2016
+      - Corrected typo in documentation that
+        would cause an error if copied and pasted.
+        https://github.com/mstratman/Catalyst-View-XML-Feed/issues/2
+
 0.08  Mon Apr 13 10:20:32 CDT 2015
       - Fixed overly restrictive failing test
 
